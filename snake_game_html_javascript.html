@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SNAKE GAME</title>
+    <style type="text/css">
+    body{
+        background:linear-gradient(to bottom,#272121,rgb(65, 62, 62));
+    }
+	 
+    canvas{
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        border:2px red solid;
+    }
+ 
+	
+	</style>
+</head>
+<body>
+ <canvas></canvas>
+ 
+ <script type="text/javascript">
+ var canvas=document.querySelector("canvas");
+ canvas.height=600;
+ canvas.width=600;
+ var c=canvas.getContext("2d");
+
+ var score=0,unit=40,snake_x=200,snake_y=200;
+
+ //food variable
+ var food={x:Math.floor(Math.random()*15)*unit,
+            y:Math.floor(Math.random()*15)*unit};
+var direction;
+ var snake=[];
+ snake[0]={x:280,y:280}
+
+
+ 
+document.addEventListener("keydown",function(event){
+if(event.keyCode==38&&direction!="DOWN"){
+direction="UP"
+}else if(event.keyCode==40&&direction!="UP"){
+    direction="DOWN"
+
+}else if(event.keyCode==39&&direction!="LEFT"){
+    direction="RIGHT"
+
+}else if(event.keyCode==37&&direction!="RIGHT"){
+    direction="LEFT"
+
+}
+ })
+
+
+
+function animate(){
+    c.clearRect(0,0,600,600);
+    for(var i=0;i<snake.length;i++){
+         c.fillStyle=(i==0)?"blue":"red";
+        c.fillRect(snake[i].x,snake[i].y,unit,unit);
+    }
+    //creation of food at new position
+    c.fillStyle="red";
+            c.strokeStyle="green";  
+            c.lineWidth=10;
+            c.beginPath();
+c.arc(food.x+20,food.y+20,7,0,Math.PI*2,false);
+c.stroke();
+c.fill();
+c.closePath();
+
+//old head position
+    snake_x=snake[0].x;
+    snake_x=snake[0].x;
+
+    //crossinng the walls if it gets collidded
+if(snake[0].x==600){snake_x=0};
+if(snake[0].y==600){snake_y=-unit};
+if(snake[0].x<=-unit){snake_x=600-unit};
+if(snake[0].y<=-unit){snake_y=600};
+
+   
+
+    //checking the direction
+    if(direction=="UP"){snake_y-=unit};
+    if(direction=="DOWN"){snake_y+=unit};
+    if(direction=="RIGHT"){snake_x+=unit};
+    if(direction=="LEFT"){snake_x-=unit};
+
+    if(snake_x==food.x&&snake_y==food.y){
+        food={x:Math.floor(Math.random()*15)*unit,
+            y:Math.floor(Math.random()*15)*unit};
+            score++;
+    }else{
+            //remove the tail 
+        snake.pop();
+    }
+
+ //creating new snake head to be put in the snake
+ var new_head={x:snake_x,y:snake_y}
+   
+
+snake.unshift(new_head);
+
+ c.font="40px fanatsy"
+ c.fillStyle="white";
+c.fillText("SCORE : "+score,10,580);
+
+ for(var i=1;i<snake.length;i++){
+     if(snake[0].x==snake[i].x&&snake[0].y==snake[i].y){
+         location.reload();
+     }
+ }
+}
+window.setInterval(animate,100);  
+
+</script>
+</body>
+</html>
